@@ -3,4 +3,24 @@
     <string name="skip">Позже</string>
     <string name="categories_title">Отметьте то, что вам интересно, чтобы настроить Дзен</string>
     <string name="go_next">Продолжить</string>
+
+    <string name="poll_question_title">Вопрос №%1$d</string>
+    <string name="one">один</string>
+    <string name="two">два</string>
+    <string name="three">три</string>
+    <string name="four">четыре</string>
+    <string name="five">пять</string>
+    <string name="six">шесть</string>
+    <string name="seven">семь</string>
+    <string name="eight">восемь</string>
+    <string name="nine">девять</string>
+    <string name="ten">десять</string>
+    <string name="other">другое</string>
+    <string name="poll_question_number">Вопрос %1$d/%2$d</string>
+
+    <string name="gap_question_title">Заполните пропуски в тексте</string>
+    <string name="gap_with_answers_title">Перетащите текст в места пропуска</string>
+    <string name="rating_title">Оцените прочитанную статью</string>
+    <string name="column_title">Сопоставьте элементы между двумя столбцами</string>
+
 </resources>

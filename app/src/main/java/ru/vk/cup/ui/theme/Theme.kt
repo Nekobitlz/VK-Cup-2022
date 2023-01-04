@@ -10,7 +10,7 @@ private val LightColorPalette = lightColors(
     primary = Color.Black,
     primaryVariant = Color.Black,
     secondary = Color.Black,
-    background = Color.Black,
+    background = Color.White,
     surface = Color.Black,
 )
 
