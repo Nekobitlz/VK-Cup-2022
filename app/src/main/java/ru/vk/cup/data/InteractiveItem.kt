@@ -6,7 +6,10 @@ sealed class InteractiveItem {
         data class PollItem(val text: String, var isSelected: Boolean = false)
     }
 
-    data class Column(val index: Int, val pairs: Map<ColumnItem, ColumnItem>) : InteractiveItem() {
+    data class Column(val index: Int,
+                      var pairs: Map<ColumnItem, ColumnItem>,
+                      val correctPairs: Map<ColumnItem, ColumnItem>,
+    ) : InteractiveItem() {
         data class ColumnItem(val text: String)
     }
 

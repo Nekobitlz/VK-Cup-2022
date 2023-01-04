@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import ru.vk.cup.data.InteractiveItem
 import ru.vk.cup.data.InteractiveItemRepository
 import ru.vk.cup.ui.theme.VKCup2022Theme
+import ru.vk.cup.ui.view.ColumnView
 import ru.vk.cup.ui.view.GapsView
 import ru.vk.cup.ui.view.LongPressDraggable
 import ru.vk.cup.ui.view.PollView
@@ -39,7 +40,7 @@ class MainActivity : ComponentActivity() {
                                     is InteractiveItem.Poll -> PollView(modifier, it, pollCount)
                                     is InteractiveItem.Rating -> RatingView(modifier, it, pollCount)
                                     is InteractiveItem.Gaps -> GapsView(modifier, it, pollCount)
-                                    else -> {}
+                                    is InteractiveItem.Column -> ColumnView(modifier, it, pollCount)
                                 }
                             }
                         }
