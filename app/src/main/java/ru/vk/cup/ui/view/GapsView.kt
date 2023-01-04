@@ -25,14 +25,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Constraints
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.flowlayout.FlowRow
@@ -73,7 +70,6 @@ fun GapsView(
                             })
                         }
                     }
-
                     Gaps.GapTextType.TEXT_FIELD -> {
                         var text by rememberSaveable { mutableStateOf("") }
                         GapField(gapItem, text) {
@@ -92,17 +88,7 @@ fun GapsView(
                             modifier = Modifier
                                 .padding(horizontal = 1.dp)
                                 .border(1.dp, Color.Black, RoundedCornerShape(16.dp))
-                                .padding(horizontal = 8.dp, vertical = 4.dp)
-                            /*.pointerInput(Unit) {
-                                detectTapGestures(
-                                    onDoubleTap = {
-                                        val emptyGap = item.text.find { it.currentText != null }
-                                        if (emptyGap != null) {
-                                            item.text[item.text.indexOf(emptyGap)] = emptyGap.copy(currentText = gapItem.text)
-                                        }
-                                    }
-                                )
-                            }*/,
+                                .padding(horizontal = 8.dp, vertical = 4.dp),
                             style = MaterialTheme.typography.body1.copy(
                                 fontSize = 18.sp,
                                 platformStyle = PlatformTextStyle(
@@ -154,21 +140,4 @@ private fun GapField(
                 unfocusedIndicatorLineThickness = 2.dp,
             )
     )
-}
-
-@Composable
-fun MeasureUnconstrainedViewWidth(
-    viewToMeasure: @Composable () -> Unit,
-    content: @Composable (measuredWidth: Dp) -> Unit,
-) {
-    SubcomposeLayout { constraints ->
-        val measuredWidth = subcompose("viewToMeasure", viewToMeasure)[0]
-            .measure(Constraints()).width.toDp()
-        val contentPlaceable = subcompose("content") {
-            content(measuredWidth)
-        }[0].measure(constraints)
-        layout(contentPlaceable.width, contentPlaceable.height) {
-            contentPlaceable.place(0, 0)
-        }
-    }
 }

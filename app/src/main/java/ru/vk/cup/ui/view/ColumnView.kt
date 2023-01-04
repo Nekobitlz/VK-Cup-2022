@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -241,6 +242,10 @@ private fun ColumnWithDrawing(item: InteractiveItem.Column) = Box(modifier = Mod
                 )
             )
         }
+    }
+    if (answerPaths.size == item.correctPairs.size && answerPaths.all { it.isCorrect }) {
+        // fireworks :)
+        GifImage(modifier = Modifier.height(Dp(canvasSize.height / screenPixelDensity)))
     }
 }
 

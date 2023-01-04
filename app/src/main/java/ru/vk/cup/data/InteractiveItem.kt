@@ -20,7 +20,6 @@ sealed class InteractiveItem {
         data class GapItem(
             val text: String,
             val type: GapTextType = GapTextType.DEFAULT,
-            var currentText: String? = null
         )
 
         enum class GapTextType {
