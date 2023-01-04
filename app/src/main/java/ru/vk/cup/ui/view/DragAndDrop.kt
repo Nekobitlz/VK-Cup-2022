@@ -84,12 +84,10 @@ fun <T> DragTarget(
                 currentState.isDragging = false
                 currentState.dragOffset = Offset.Zero
                 currentState.dragPosition = Offset.Zero
-           //     currentState.dataToDrop = null
             }, onDragCancel = {
                 currentState.dragOffset = Offset.Zero
                 currentState.isDragging = false
                 currentState.dragPosition = Offset.Zero
-           //     currentState.dataToDrop = null
             })
         }) {
         content()

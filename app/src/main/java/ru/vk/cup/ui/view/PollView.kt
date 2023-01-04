@@ -1,7 +1,8 @@
 package ru.vk.cup.ui.view
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -29,6 +30,7 @@ import ru.vk.cup.ui.theme.pollSelectedColor
 import ru.vk.cup.ui.theme.pollSelectedIcon
 import ru.vk.cup.ui.utils.vibrate
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 @Preview
 fun PollView(
@@ -50,7 +52,7 @@ fun PollView(
         stringResource(R.string.poll_question_number, poll.index, count)
     )
     Column {
-        poll.items.forEach {
+        poll.items.forEach { pollItem ->
             val view = LocalView.current
             Row(
                 modifier = Modifier
@@ -58,27 +60,37 @@ fun PollView(
                     .fillMaxWidth()
                     .height(44.dp)
                     .background(
-                        color = if (it.isSelected) pollSelectedColor else pollDefaultColor,
+                        color = if (pollItem.isSelected) pollSelectedColor else pollDefaultColor,
                         shape = RoundedCornerShape(4.dp),
                     )
-                    .clickable {
-                        val index = poll.items.indexOf(it)
-                        for (i in poll.items.indices) {
-                            poll.items[i] = poll.items[i].copy(isSelected = i == index)
-                        }
-                        view.vibrate()
-                    }
+                    .combinedClickable(
+                        onClick = {
+                            val index = poll.items.indexOf(pollItem)
+                            for (i in poll.items.indices) {
+                                poll.items[i] = poll.items[i].copy(isSelected = i == index)
+                            }
+                            view.vibrate()
+                        },
+                        onLongClick = {
+                            val index = poll.items.indexOf(pollItem)
+                            if (poll.items.indexOfFirst { it.isSelected } == index) {
+                                for (i in poll.items.indices) {
+                                    poll.items[i] = poll.items[i].copy(isSelected = false)
+                                }
+                                view.vibrate()
+                            }
+                        })
                     .padding(10.dp)
             ) {
-                val fontWeight = if (it.isSelected) FontWeight.Bold else FontWeight.Normal
+                val fontWeight = if (pollItem.isSelected) FontWeight.Bold else FontWeight.Normal
                 Text(
-                    text = it.text,
+                    text = pollItem.text,
                     color = Color.Black,
                     textAlign = TextAlign.Center,
                     fontWeight = fontWeight
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                if (it.isSelected) {
+                if (pollItem.isSelected) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_check),
                         contentDescription = "",
@@ -88,7 +100,7 @@ fun PollView(
                 }
                 if (poll.items.any { it.isSelected }) {
                     Text(
-                        text = if (it.isSelected) "100%" else "0%",
+                        text = if (pollItem.isSelected) "100%" else "0%",
                         color = Color.Black,
                         fontWeight = fontWeight
                     )
