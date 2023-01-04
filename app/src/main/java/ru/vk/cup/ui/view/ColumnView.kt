@@ -29,6 +29,7 @@ import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,6 +41,7 @@ import com.smarttoolfactory.gesture.MotionEvent
 import com.smarttoolfactory.gesture.pointerMotionEvents
 import ru.vk.cup.R
 import ru.vk.cup.data.InteractiveItem
+import ru.vk.cup.ui.utils.vibrateStrong
 
 @Composable
 @Preview
@@ -69,6 +71,8 @@ fun ColumnView(
 
 @Composable
 private fun ColumnWithDrawing(item: InteractiveItem.Column) = Box(modifier = Modifier.padding(top = 8.dp)) {
+    val view = LocalView.current
+
     var motionEvent by remember { mutableStateOf(MotionEvent.Idle) }
     var currentPosition by remember { mutableStateOf(Offset.Unspecified) }
     var previousPosition by remember { mutableStateOf(Offset.Unspecified) }
@@ -134,6 +138,9 @@ private fun ColumnWithDrawing(item: InteractiveItem.Column) = Box(modifier = Mod
                             if (currentPosition != Offset.Unspecified
                                 && rect.contains(currentPosition)
                             ) {
+                                if (pair.key != connectedLeft?.item) {
+                                    view.vibrateStrong()
+                                }
                                 connectedLeft = ConnectedData(pair.key, rect)
                             }
                         }
@@ -148,6 +155,9 @@ private fun ColumnWithDrawing(item: InteractiveItem.Column) = Box(modifier = Mod
                             if (currentPosition != Offset.Unspecified
                                 && rect.contains(currentPosition)
                             ) {
+                                if (pair.value != connectedRight?.item) {
+                                    view.vibrateStrong()
+                                }
                                 connectedRight = ConnectedData(pair.value, rect)
                             }
                         }
