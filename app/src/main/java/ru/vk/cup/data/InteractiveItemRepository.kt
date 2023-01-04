@@ -5,13 +5,13 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.runtime.toMutableStateMap
 import ru.vk.cup.R
 import ru.vk.cup.data.InteractiveItem.*
+import java.util.LinkedList
 
 class InteractiveItemRepository(private val context: Context) {
 
     val items by lazy(LazyThreadSafetyMode.NONE) { generateItems() }
 
     fun generateItems(): List<InteractiveItem> = (0 until 10).map { i ->
-        generatePoll(i, (4..10).random())
         when (i % 5) {
             1 -> generateColumn(i, (4..10).random())
             2 -> generateGapsWithFields(i)
@@ -30,11 +30,14 @@ class InteractiveItemRepository(private val context: Context) {
     }
 
     fun generateColumn(index: Int, size: Int): Column {
+        val correctPairs = (0 until size).associate {
+            Column.ColumnItem(getStringNumber(it)) to Column.ColumnItem(it.toString())
+        }.toList().toMutableStateMap()
+        val randomValues = LinkedList(correctPairs.values.shuffled())
         return Column(
-            index,
-            pairs = (0 until size).associate {
-                Column.ColumnItem(getStringNumber(it)) to Column.ColumnItem(it.toString())
-            }.toList().toMutableStateMap()
+            index + 1,
+            pairs = correctPairs.keys.associateWith { randomValues.pop() },
+            correctPairs = correctPairs
         )
     }
 
@@ -48,7 +51,7 @@ class InteractiveItemRepository(private val context: Context) {
                 Gaps.GapItem("очень длинный вариант", Gaps.GapTextType.ANSWER),
             )
             return Gaps(
-                index,
+                index + 1,
                 listOf(
                     Gaps.GapItem("Текст"),
                     answers[0],
@@ -65,7 +68,7 @@ class InteractiveItemRepository(private val context: Context) {
                 Gaps.GapItem("и", Gaps.GapTextType.TEXT_FIELD),
             )
             return Gaps(
-                index,
+                index + 1,
                 listOf(
                     Gaps.GapItem("Текст"),
                     answers[0],
@@ -78,7 +81,7 @@ class InteractiveItemRepository(private val context: Context) {
     }
 
     fun generateRating(index: Int, size: Int): Rating {
-        return Rating(index, size)
+        return Rating(index + 1, size)
     }
 
     private fun generatePollItem(number: Int) = Poll.PollItem(

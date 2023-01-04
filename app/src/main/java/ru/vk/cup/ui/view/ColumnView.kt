@@ -1,7 +1,6 @@
 package ru.vk.cup.ui.view
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -76,6 +75,7 @@ private fun ColumnWithDrawing(item: InteractiveItem.Column) = Box(modifier = Mod
 
     var canvasSize by remember { mutableStateOf(IntSize.Zero) }
     var canvasRect by remember { mutableStateOf(Rect(0f, 0f, 0f, 0f)) }
+
     var path by remember { mutableStateOf(Path()) }
     val answerPaths = remember { mutableListOf<AnswerPath>() }
     var connectedLeft by remember { mutableStateOf<ConnectedData?>(null) }
@@ -83,8 +83,7 @@ private fun ColumnWithDrawing(item: InteractiveItem.Column) = Box(modifier = Mod
 
     val screenPixelDensity = LocalDensity.current.density
     val drawModifier = Modifier
-        .background(Color.Yellow.copy(alpha = 0.3f))
-        .size(Dp(canvasSize.width / screenPixelDensity),Dp( canvasSize.height / screenPixelDensity))
+        .size(Dp(canvasSize.width / screenPixelDensity), Dp( canvasSize.height / screenPixelDensity))
         .pointerMotionEvents(
             onDown = { pointerInputChange: PointerInputChange ->
                 currentPosition = pointerInputChange.position
@@ -107,19 +106,23 @@ private fun ColumnWithDrawing(item: InteractiveItem.Column) = Box(modifier = Mod
                 canvasRect = rect
             }
         }
+    val itemPadding = 8.dp
+    val borderSize = 1.dp
     Column(modifier = Modifier.onGloballyPositioned { coordinates ->
         canvasSize = coordinates.size
     }) {
         val itemModifier = Modifier
             .padding(vertical = 1.dp)
-            .border(1.dp, Color.Black, RoundedCornerShape(16.dp))
-            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .border(borderSize, Color.Black, RoundedCornerShape(16.dp))
+            .padding(horizontal = itemPadding, vertical = 4.dp)
         val itemStyle = MaterialTheme.typography.body1.copy(
             fontSize = 21.sp,
             platformStyle = PlatformTextStyle(includeFontPadding = false)
         )
         item.pairs.forEach { pair ->
             Row {
+                // currentPosition counts starting from canvas's 0,
+                // but we need to check bounds from screen's 0
                 val currentPosition = if (currentPosition != Offset.Unspecified) currentPosition.copy(
                     x = currentPosition.x + canvasRect.left,
                     y = currentPosition.y + canvasRect.top
@@ -179,8 +182,16 @@ private fun ColumnWithDrawing(item: InteractiveItem.Column) = Box(modifier = Mod
                         val startPosition = connectedLeft.rect.centerRight
                         val endPosition = connectedRight.rect.centerLeft
                         val answerPath = Path().apply {
-                            moveTo(startPosition.x - canvasRect.left, startPosition.y - canvasRect.top)
-                            lineTo(endPosition.x - canvasRect.left, endPosition.y - canvasRect.top)
+                            // currentPosition counts starting from canvas's 0,
+                            // but we need to draw from screen's 0
+                            moveTo(
+                                startPosition.x - canvasRect.left + itemPadding.toPx() + borderSize.toPx(),
+                                startPosition.y - canvasRect.top
+                            )
+                            lineTo(
+                                endPosition.x - canvasRect.left - itemPadding.toPx() - borderSize.toPx(),
+                                endPosition.y - canvasRect.top
+                            )
                         }
                         val alreadyAdded = answerPaths.find {
                             it.left == connectedLeft.item || it.right == connectedRight.item
@@ -202,7 +213,6 @@ private fun ColumnWithDrawing(item: InteractiveItem.Column) = Box(modifier = Mod
                 connectedRight = null
                 path = Path()
             }
-
             else -> Unit
         }
         drawPath(
