@@ -177,10 +177,10 @@ private fun ColumnWithDrawing(item: InteractiveItem.Column) = Box(modifier = Mod
                 currentPosition = Offset.Unspecified
                 previousPosition = currentPosition
                 motionEvent = MotionEvent.Idle
-                connectedLeft?.let { connectedLeft ->
-                    connectedRight?.let { connectedRight ->
-                        val startPosition = connectedLeft.rect.centerRight
-                        val endPosition = connectedRight.rect.centerLeft
+                connectedLeft?.let { left ->
+                    connectedRight?.let { right ->
+                        val startPosition = left.rect.centerRight
+                        val endPosition = right.rect.centerLeft
                         val answerPath = Path().apply {
                             // currentPosition counts starting from canvas's 0,
                             // but we need to draw from screen's 0
@@ -194,7 +194,7 @@ private fun ColumnWithDrawing(item: InteractiveItem.Column) = Box(modifier = Mod
                             )
                         }
                         val alreadyAdded = answerPaths.find {
-                            it.left == connectedLeft.item || it.right == connectedRight.item
+                            it.left == left.item || it.right == right.item
                         }
                         if (alreadyAdded != null) {
                             answerPaths.remove(alreadyAdded)
@@ -202,15 +202,15 @@ private fun ColumnWithDrawing(item: InteractiveItem.Column) = Box(modifier = Mod
                         answerPaths.add(
                             AnswerPath(
                                 answerPath,
-                                connectedLeft.item,
-                                connectedRight.item,
-                                connectedRight.item == item.correctPairs[connectedLeft.item]
+                                left.item,
+                                right.item,
+                                right.item == item.correctPairs[left.item]
                             )
                         )
+                        connectedLeft = null
+                        connectedRight = null
                     }
                 }
-                connectedLeft = null
-                connectedRight = null
                 path = Path()
             }
             else -> Unit
