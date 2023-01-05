@@ -88,7 +88,7 @@ private fun ColumnWithDrawing(item: InteractiveItem.Column) = Box(modifier = Mod
 
     val screenPixelDensity = LocalDensity.current.density
     val drawModifier = Modifier
-        .size(Dp(canvasSize.width / screenPixelDensity), Dp( canvasSize.height / screenPixelDensity))
+        .size(Dp(canvasSize.width / screenPixelDensity), Dp(canvasSize.height / screenPixelDensity))
         .pointerMotionEvents(
             onDown = { pointerInputChange: PointerInputChange ->
                 currentPosition = pointerInputChange.position

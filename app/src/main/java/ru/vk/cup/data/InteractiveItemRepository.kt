@@ -9,8 +9,6 @@ import java.util.LinkedList
 
 class InteractiveItemRepository(private val context: Context) {
 
-    val items by lazy(LazyThreadSafetyMode.NONE) { generateItems() }
-
     fun generateItems(): List<InteractiveItem> = (0 until 10).map { i ->
         when (i % 5) {
             1 -> generateColumn(i, (4..10).random())
@@ -19,7 +17,7 @@ class InteractiveItemRepository(private val context: Context) {
             4 -> generateRating(i, (5..10).random())
             else -> generatePoll(i, (4..10).random())
         }
-    }.toMutableStateList()
+    }
 
     fun generatePoll(index: Int, size: Int): Poll {
         return Poll(
