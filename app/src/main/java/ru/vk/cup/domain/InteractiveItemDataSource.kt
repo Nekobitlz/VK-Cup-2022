@@ -1,4 +1,4 @@
-package ru.vk.cup.presentation
+package ru.vk.cup.domain
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState

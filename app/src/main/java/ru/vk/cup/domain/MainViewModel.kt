@@ -1,4 +1,4 @@
-package ru.vk.cup.presentation
+package ru.vk.cup.domain
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
