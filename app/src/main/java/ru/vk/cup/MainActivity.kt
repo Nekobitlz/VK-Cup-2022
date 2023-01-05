@@ -23,7 +23,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import ru.vk.cup.data.InteractiveItem
-import ru.vk.cup.domain.MainViewModel
+import ru.vk.cup.presentation.MainViewModel
 import ru.vk.cup.ui.theme.VKCup2022Theme
 import ru.vk.cup.ui.view.ColumnView
 import ru.vk.cup.ui.view.GapsView

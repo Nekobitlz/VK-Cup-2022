@@ -1,10 +1,8 @@
-package ru.vk.cup.domain
+package ru.vk.cup.data
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import ru.vk.cup.NavigationType
-import ru.vk.cup.data.InteractiveItem
-import ru.vk.cup.data.InteractiveItemRepository
 
 class InteractiveItemDataSource(
     private val repository: InteractiveItemRepository,

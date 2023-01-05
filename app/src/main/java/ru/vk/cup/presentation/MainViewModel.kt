@@ -1,4 +1,4 @@
-package ru.vk.cup.domain
+package ru.vk.cup.presentation
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -7,6 +7,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import ru.vk.cup.NavigationType
+import ru.vk.cup.data.InteractiveItemDataSource
 import ru.vk.cup.data.InteractiveItemRepository
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
