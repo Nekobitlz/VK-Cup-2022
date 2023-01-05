@@ -9,7 +9,7 @@ import java.util.LinkedList
 
 class InteractiveItemRepository(private val context: Context) {
 
-    fun generateItems(): List<InteractiveItem> = (0 until 10).map { i ->
+    fun generateItems(from: Int, size: Int): List<InteractiveItem> = (from until from + size).map { i ->
         when (i % 5) {
             1 -> generateColumn(i, (4..10).random())
             2 -> generateGapsWithFields(i)
@@ -19,7 +19,23 @@ class InteractiveItemRepository(private val context: Context) {
         }
     }
 
-    fun generatePoll(index: Int, size: Int): Poll {
+    fun generateGapsWithAnswers(from: Int, size: Int) = (from until from + size).map {
+        generateGapsWithAnswers(it)
+    }
+
+    fun generateGapsWithFields(from: Int, size: Int) = (from until from + size).map {
+        generateGapsWithFields(it)
+    }
+
+    fun generateRatings(from: Int, size: Int) = (from until from + size).map {
+        generateRating(it, (5..10).random())
+    }
+
+    fun generatePolls(from: Int, size: Int) = (from until from + size).map {
+        generatePoll(it, (4..10).random())
+    }
+
+    private fun generatePoll(index: Int, size: Int): Poll {
         return Poll(
             index = index + 1,
             title = context.getString(R.string.poll_question_title, index + 1),
@@ -27,7 +43,11 @@ class InteractiveItemRepository(private val context: Context) {
         )
     }
 
-    fun generateColumn(index: Int, size: Int): Column {
+    fun generateColumns(from: Int, size: Int) = (from until from + size).map {
+        generateColumn(it, (4..10).random())
+    }
+
+    private fun generateColumn(index: Int, size: Int): Column {
         val correctPairs = (0 until size).associate {
             Column.ColumnItem(getStringNumber(it)) to Column.ColumnItem(it.toString())
         }.toList().toMutableStateMap()
@@ -78,7 +98,7 @@ class InteractiveItemRepository(private val context: Context) {
         }
     }
 
-    fun generateRating(index: Int, size: Int): Rating {
+    private fun generateRating(index: Int, size: Int): Rating {
         return Rating(index + 1, size)
     }
 

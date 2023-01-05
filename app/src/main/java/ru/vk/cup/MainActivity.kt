@@ -8,22 +8,22 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import ru.vk.cup.data.InteractiveItem
-import ru.vk.cup.data.InteractiveItemRepository
+import ru.vk.cup.presentation.MainViewModel
 import ru.vk.cup.ui.theme.VKCup2022Theme
 import ru.vk.cup.ui.view.ColumnView
 import ru.vk.cup.ui.view.GapsView
@@ -80,28 +80,18 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun ItemsScreen(navigationType: NavigationType) {
-        val repository = remember { InteractiveItemRepository(this) }
-        val items = rememberSaveable {
-            when (navigationType) {
-                NavigationType.POLL -> (0 until 10).map { i -> repository.generatePoll(i, (4..10).random()) }
-                NavigationType.ALL_ITEMS -> repository.generateItems()
-                NavigationType.RATING -> (0 until 10).map { i -> repository.generateRating(i, (4..10).random()) }
-                NavigationType.GAPS_WITH_ANSWERS -> (0 until  10).map { i -> InteractiveItemRepository.generateGapsWithAnswers(i) }
-                NavigationType.GAPS_WITH_FIELDS -> (0 until 10).map { i -> InteractiveItemRepository.generateGapsWithFields(i) }
-                NavigationType.COLUMN -> (0 until 10).map { i -> repository.generateColumn(i, (4..10).random()) }
-            }
-        }
-        val count = items.count()
+    private fun ItemsScreen(navigationType: NavigationType, mainViewModel: MainViewModel = viewModel()) {
+        val items = mainViewModel.getItems(navigationType).collectAsLazyPagingItems()
         val modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
         LongPressDraggable(modifier = Modifier.fillMaxSize()) {
             LazyColumn {
-                items(items) {
+                items(items, key = { it.index }) {
                     when (it) {
-                        is InteractiveItem.Poll -> PollView(modifier, it, count)
-                        is InteractiveItem.Rating -> RatingView(modifier, it, count)
-                        is InteractiveItem.Gaps -> GapsView(modifier, it, count)
-                        is InteractiveItem.Column -> ColumnView(modifier, it, count)
+                        is InteractiveItem.Poll -> PollView(modifier, it, items.itemCount)
+                        is InteractiveItem.Rating -> RatingView(modifier, it, items.itemCount)
+                        is InteractiveItem.Gaps -> GapsView(modifier, it, items.itemCount)
+                        is InteractiveItem.Column -> ColumnView(modifier, it, items.itemCount)
+                        else -> {}
                     }
                 }
             }

@@ -1,21 +1,21 @@
 package ru.vk.cup.data
 
-sealed class InteractiveItem {
-    data class Poll(val index: Int, val title: String, val items: MutableList<PollItem>) :
-        InteractiveItem() {
+sealed class InteractiveItem(open val index: Int) {
+    data class Poll(override val index: Int, val title: String, val items: MutableList<PollItem>) :
+        InteractiveItem(index) {
         data class PollItem(val text: String, var isSelected: Boolean = false)
     }
 
-    data class Column(val index: Int,
+    data class Column(override val index: Int,
                       var pairs: Map<ColumnItem, ColumnItem>,
                       val correctPairs: Map<ColumnItem, ColumnItem>,
-    ) : InteractiveItem() {
+    ) : InteractiveItem(index) {
         data class ColumnItem(val text: String)
     }
 
     data class Gaps(
-        val index: Int, val text: List<GapItem>, val answers: List<GapItem>? = null
-    ) : InteractiveItem() {
+        override val index: Int, val text: List<GapItem>, val answers: List<GapItem>? = null
+    ) : InteractiveItem(index) {
 
         data class GapItem(
             val text: String,
@@ -27,5 +27,5 @@ sealed class InteractiveItem {
         }
     }
 
-    data class Rating(val index: Int, val count: Int, var selected: Int = -1) : InteractiveItem()
+    data class Rating(override val index: Int, val count: Int, var selected: Int = -1) : InteractiveItem(index)
 }
